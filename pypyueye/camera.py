@@ -31,7 +31,6 @@ from pyueye import ueye
 from .utils import (uEyeException, Rect, get_bits_per_pixel,
                     ImageBuffer, check, ImageData)
 
-
 class Camera(object):
     def __init__(self, device_id=0, buffer_count=3):
         self.h_cam = ueye.HIDS(device_id)
@@ -424,3 +423,66 @@ class Camera(object):
         check(ueye.is_ImageFormat(self.h_cam, ueye.IMGFRMT_CMD_GET_LIST,
                                   format_list, ueye.sizeof(format_list)))
         return format_list
+
+    def get_flash_mode(self):
+        """
+        Get the current flash mode
+        """
+        mode = ueye.c_uint()
+
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_GET_MODE,
+                         mode, ueye.sizeof(mode)))
+        return mode
+
+    def get_flash_params(self):
+        """
+        Get the current flash parameters
+        """
+        flash_params = ueye.IO_FLASH_PARAMS()
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_GET_GLOBAL_PARAMS,
+                         flash_params, ueye.sizeof(flash_params)))
+        flash_delay = flash_params.s32Delay
+        flash_duration = flash_params.u32Duration
+
+        return (flash_delay, flash_duration)
+
+    def get_min_flash_params(self):
+        """
+        Get the minimum flash parameters
+        """
+        flash_params = ueye.IO_FLASH_PARAMS()
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_GET_PARAMS_MIN,
+                         flash_params, ueye.sizeof(flash_params)))
+        flash_min_delay = flash_params.s32Delay
+        flash_min_duration = flash_params.u32Duration
+
+        return (flash_min_delay, flash_min_duration)
+
+    def set_flash_params(self, delay, duration):
+        """
+        Set the flash parameters
+
+        Parameters
+        ==========
+        delay: number, in microseconds
+        duration: number, in microseconds
+        """
+
+        flash_params = ueye.IO_FLASH_PARAMS()
+        flash_params.s32Delay = ueye.c_int(delay)
+        flash_params.u32Duration = ueye.c_uint(duration)
+
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_SET_PARAMS,
+                         flash_params, ueye.sizeof(flash_params)))
+
+    def set_flash_mode(self, mode):
+        """
+        Set the flash mode
+
+        Parameters
+        ==========
+        mode: ueye flash mode, see official documentation
+              for example 'ueye.IO_FLASH_MODE_FREERUN_HI_ACTIVE'
+        """
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_SET_MODE,
+                         mode, ueye.sizeof(mode)))
