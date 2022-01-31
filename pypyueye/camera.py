@@ -487,3 +487,17 @@ class Camera(object):
         check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_SET_MODE,
                          mode, 4))
 
+    def set_gpio(self, state):
+        """
+        Set the GPIO to LOW or HIGH
+
+        Parameters
+        ==========
+        state: 0 for LOW, 1 for HIGH
+        """
+        gpio_config = ueye.IO_GPIO_CONFIGURATION()
+        gpio_config.u32Gpio = ueye.IO_GPIO_1
+        gpio_config.u32Configuration = ueye.IS_GPIO_OUTPUT
+        gpio_config.u32state = state
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_GPIOS_SET_CONFIGURATION,
+                         gpio_config, ueye.sizeof(gpio_config)))
