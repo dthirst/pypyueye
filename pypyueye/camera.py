@@ -488,8 +488,9 @@ class Camera(object):
         mode: ueye flash mode, see official documentation
               for example 'ueye.IO_FLASH_MODE_FREERUN_HI_ACTIVE'
         """
+        flash_mode = ueye.c_uint(mode)
         check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_SET_MODE,
-                         mode, 4))
+                         flash_mode, ueye.sizeof(flash_mode)))
 
     def set_gpio(self, state):
         """
