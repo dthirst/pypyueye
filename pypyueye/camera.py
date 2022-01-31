@@ -358,10 +358,12 @@ class Camera(object):
             data = None
         return data
 
-    def capture_images(self, nmb, timeout=None):
+    def capture_images(self, nmb, timeout=None, send_io=False):
         if timeout is None:
             timeout = self.__get_timeout()
         self.capture_video()
+        if send_io:
+            self.set_gpio(1)
         ims = []
         for i in range(nmb):
             img_buffer = ImageBuffer()
@@ -377,6 +379,8 @@ class Camera(object):
                 print("Warning: Missed %dth frame !"% d)
                 ims.append(None)
         self.stop_video()
+        if send_io:
+            self.set_gpio(0)
         return ims
 
     def freeze_video(self, wait=False):
