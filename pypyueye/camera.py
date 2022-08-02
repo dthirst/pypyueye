@@ -506,3 +506,14 @@ class Camera(object):
         gpio_config.u32state = state
         check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_GPIOS_SET_CONFIGURATION,
                          gpio_config, ueye.sizeof(gpio_config)))
+
+    def set_external_trigger_mode(self, triggermode):
+        """
+        Set the trigger mode.
+
+        Parameters
+        ==========
+        triggermode: pyueye trigger mode
+            Triggermode, as 'pyueye.IS_SET_TRIGGER_OFF' for example.
+        """
+        check(ueye.is_SetExternalTrigger(self.h_cam, triggermode))
