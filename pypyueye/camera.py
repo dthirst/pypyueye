@@ -118,6 +118,9 @@ class Camera(object):
 
     def set_gain(self, master, r, g, b):
         ueye.is_SetHardwareGain(self.h_cam, master, r,g,b)
+
+    def set_gain_factor(self, gain_factor):
+        ueye.is_SetHWGainFactor(self.h_cam, ueye.IS_SET_MASTER_GAIN_FACTOR, gain_factor)
         
     def set_aoi(self, x, y, width, height):
         """
