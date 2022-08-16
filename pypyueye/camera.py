@@ -443,7 +443,7 @@ class Camera(object):
         Get the current flash parameters
         """
         flash_params = ueye.IO_FLASH_PARAMS()
-        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_GET_GLOBAL_PARAMS,
+        check(ueye.is_IO(self.h_cam, ueye.IS_IO_CMD_FLASH_GET_PARAMS,
                          flash_params, ueye.sizeof(flash_params)))
         flash_delay = flash_params.s32Delay
         flash_duration = flash_params.u32Duration
